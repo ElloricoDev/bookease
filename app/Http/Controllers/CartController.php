@@ -4,39 +4,73 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
-use Cart; // Assuming you are using a package like "gloudemans/shoppingcart"
+use App\Models\CartItem;
 
 class CartController extends Controller
 {
     // Display the cart
     public function index()
     {
-        // Get the content of the cart (using Cart package or your own custom logic)
-        $cartItems = Cart::getContent();
+        $userId = session('user_id');
+        
+        if (!$userId) {
+            return redirect('/login')->with('error', 'Please login to view your cart.');
+        }
 
-        // Pass the cart items to the view
-        return view('cart.index', compact('cartItems'));
+        $cartItems = CartItem::where('user_id', $userId)
+            ->where('status', 'in-cart')
+            ->with('book')
+            ->get();
+
+        return view('user.cart', compact('cartItems'));
     }
 
-    // Add book to the cart
-    public function addToCart($id)
+    // Remove item from cart
+    public function remove($id)
     {
-        // Find the book by ID
-        $book = Book::findOrFail($id);
+        $userId = session('user_id');
+        
+        $cartItem = CartItem::where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
 
-        // Add the book to the cart
-        Cart::add([
-            'id' => $book->id,
-            'name' => $book->title,
-            'price' => $book->price,  // Assuming the book model has a price attribute
-            'quantity' => 1, // Default to 1 book added
-            'attributes' => [
-                'author' => $book->author,
-                'image' => $book->image,
-            ]
+        if ($cartItem) {
+            $cartItem->delete();
+            return redirect()->route('cart')->with('success', 'Item removed from cart.');
+        }
+
+        return redirect()->route('cart')->with('error', 'Item not found.');
+    }
+
+    // Update cart item (days, fee)
+    public function update(Request $request, $id)
+    {
+        $userId = session('user_id');
+        
+        $request->validate([
+            'days' => 'required|integer|min:1|max:365',
         ]);
 
-        // Redirect back to the books page or wherever you want
-        return redirect()->route('books.index')->with('success', 'Book added to cart!');
+        $cartItem = CartItem::where('id', $id)
+            ->where('user_id', $userId)
+            ->with('book')
+            ->first();
+
+        if (!$cartItem) {
+            return redirect()->route('cart')->with('error', 'Item not found.');
+        }
+
+        $book = $cartItem->book;
+        $days = $request->days;
+        $fee = $book->rent_fee * $days;
+        $deposit = $book->deposit ?? 0;
+
+        $cartItem->update([
+            'days' => $days,
+            'fee' => $fee,
+            'deposit' => $deposit,
+        ]);
+
+        return redirect()->route('cart')->with('success', 'Cart updated successfully.');
     }
 }

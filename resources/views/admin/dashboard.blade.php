@@ -1,83 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BookEase • Admin Dashboard</title>
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
- <header class="user-header-light">
-        <div class="nav-inner">
-            <a href="{{ url('/user/home') }}" class="brand">BookEase</a>
+<x-layout title="BookEase • Admin Dashboard" bodyClass="user-page admin-page">
+    <x-admin-header />
+    
+    <div class="dashboard-layout">
+        <x-admin-sidebar />
 
-            <nav>
-                 <a href="#" class="settings-icon" title="Settings">⚙️</a>
-        </div>
-    </header> 
-  <div class="dashboard-layout">
-    <aside class="sidebar">
-      <a class="side-link" href="{{ route ('dashboard')}}">Dashboard</a>
-      <a class="side-link" href="{{ route ('user_management')}}">User Management</a>
-      <a class="side-link" href="{{ route ('book_management')}}">Book Management</a>
-      <a class="side-link" href="{{ route ('borrow_return')}}">Borrow and return</a>
-      <a class="side-link" href="{{ route ('fines')}}">Fine Management</a>
-      <a class="side-link" href="{{ route ('reports')}}">Reports</a>
-      <a class="side-link" href="{{ route ('notifications')}}">Notifications</a>
-      <a class="side-link side-logout" href="{{ route ('login')}}">Sign out</a>
-    </aside>
+        <main class="dashboard-main">
+            <div class="panel">
+                <h2><i class="fa-solid fa-gauge"></i> Dashboard</h2>
 
-    <main class="dashboard-main">
-      <div class="panel">
-        <h2>Dashboard</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-title"><i class="fa-solid fa-book"></i> Total Books</div>
+                        <div class="stat-value">{{ number_format($totalBooks) }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-title"><i class="fa-solid fa-book-open"></i> Borrowed Books</div>
+                        <div class="stat-value">{{ number_format($borrowedBooks) }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-title"><i class="fa-solid fa-users"></i> Registered Users</div>
+                        <div class="stat-value">{{ number_format($totalUsers) }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-title"><i class="fa-solid fa-exclamation-triangle"></i> Overdue Books</div>
+                        <div class="stat-value">{{ number_format($overdueBooks) }}</div>
+                    </div>
+                </div>
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-title">📑 Total Books</div>
-            <div class="stat-value">500</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">🟢 Borrowed Books</div>
-            <div class="stat-value">125</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">🧑 Registered Users</div>
-            <div class="stat-value">400</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">🔴 Overdue Books</div>
-            <div class="stat-value">12</div>
-          </div>
-        </div>
+                <div class="charts">
+                    <div class="chart-card">
+                        <div class="chart-title">Books Borrowed per Month (Last 6 Months)</div>
+                        <svg id="barChart" viewBox="0 0 320 180" aria-label="Borrowed per month"></svg>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Books by Category</div>
+                        <svg id="pieChart" viewBox="0 0 220 180" aria-label="Books by Category"></svg>
+                        <ul class="legend" id="categoryLegend"></ul>
+                    </div>
+                </div>
 
-        <div class="charts">
-          <div class="chart-card">
-            <div class="chart-title">Books Borrowed per Month</div>
-            <svg id="barChart" viewBox="0 0 320 180" aria-label="Borrowed per month"></svg>
-          </div>
-          <div class="chart-card">
-            <div class="chart-title">Books by Category</div>
-            <svg id="pieChart" viewBox="0 0 220 180" aria-label="Books by Category"></svg>
-            <ul class="legend">
-              <li><span class="lg lg-fic"></span>Fiction</li>
-              <li><span class="lg lg-nfic"></span>Non-Fiction</li>
-              <li><span class="lg lg-sci"></span>Science</li>
-              <li><span class="lg lg-his"></span>History</li>
-            </ul>
-          </div>
-        </div>
+                <div class="recent">
+                    <div class="recent-title">Recent Activity</div>
+                    <div class="recent-grid">
+                        @forelse($recentBorrowings as $borrowing)
+                            <div>
+                                @if($borrowing->returned_at)
+                                    <i class="fa-solid fa-rotate-left"></i> 
+                                    {{ $borrowing->user->name }} returned {{ $borrowing->book->title }}
+                                    <span class="muted" style="color: #999; font-size: 12px;">
+                                        {{ $borrowing->returned_at->diffForHumans() }}
+                                    </span>
+                                @else
+                                    <i class="fa-solid fa-book"></i> 
+                                    {{ $borrowing->user->name }} borrowed {{ $borrowing->book->title }}
+                                    <span class="muted" style="color: #999; font-size: 12px;">
+                                        {{ $borrowing->created_at->diffForHumans() }}
+                                    </span>
+                                @endif
+                            </div>
+                        @empty
+                            <div style="color: #666; text-align: center; padding: 20px;">
+                                No recent activity
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-        <div class="recent">
-          <div class="recent-title">Recent Activity</div>
-          <div class="recent-grid">
-            <div>Nikko Rey Arguelles borrowed Crime and Punishment</div>
-            <div>Linool Salvador Dugenio returned El Filibusterismo</div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/charts.css') }}">
+    @endpush
 
-  <script src="{{ asset('js/script.js') }}"></script>
-</body>
-</html>
+    @push('scripts')
+        <script>
+            // Pass PHP data to JavaScript
+            window.monthlyData = @json($monthlyData);
+            window.categoryData = @json($categoryData);
+        </script>
+        <script src="{{ asset('js/charts/dashboard.js') }}"></script>
+    @endpush
+</x-layout>

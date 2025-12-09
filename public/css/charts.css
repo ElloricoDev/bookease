@@ -1,0 +1,131 @@
+/* Chart Styles */
+
+.charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background-color: #fff;
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    border: 1px solid rgba(0,0,0,.05);
+}
+
+.chart-title {
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1b1f1b;
+    font-size: 1.1rem;
+}
+
+.chart-card svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.legend {
+    list-style: none;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.legend li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.legend li span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    border-radius: 2px;
+}
+
+.lg-fic { background-color: #007bff; }
+.lg-nfic { background-color: #28a745; }
+.lg-sci { background-color: #ffc107; }
+.lg-his { background-color: #dc3545; }
+.lg-oth { background-color: #6c757d; }
+
+/* Chart Bar Styles */
+.chart-bar {
+    fill: #2e7d32;
+    transition: fill 0.2s ease;
+}
+
+.chart-bar:hover {
+    fill: #1b5e20;
+}
+
+.chart-bar-label {
+    font-size: 10px;
+    fill: #666;
+    text-anchor: middle;
+}
+
+.chart-axis {
+    stroke: #ddd;
+    stroke-width: 1;
+}
+
+.chart-axis-label {
+    font-size: 11px;
+    fill: #666;
+}
+
+/* Pie Chart Styles */
+.chart-slice {
+    transition: opacity 0.2s ease;
+}
+
+.chart-slice:hover {
+    opacity: 0.8;
+}
+
+.chart-slice-label {
+    font-size: 10px;
+    fill: #fff;
+    font-weight: 600;
+    text-anchor: middle;
+}
+
+/* Line Chart Styles */
+.chart-line {
+    fill: none;
+    stroke: #2e7d32;
+    stroke-width: 2;
+}
+
+.chart-point {
+    fill: #2e7d32;
+    transition: r 0.2s ease;
+}
+
+.chart-point:hover {
+    r: 5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .charts {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-card {
+        min-width: 100%;
+    }
+}
+

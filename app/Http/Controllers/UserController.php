@@ -22,7 +22,16 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create'); // Blade: users/create.blade.php
+        return view('admin.users.create');
+    }
+
+    /**
+     * Show the form for editing the specified user.
+     */
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('user'));
     }
 
     /**

@@ -1,81 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BookEase • Borrow and Return</title>
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-  <header class="user-header-light">
-        <div class="nav-inner">
-            <a href="{{ url('/user/home') }}" class="brand">BookEase</a>
+<x-layout title="BookEase • Borrow and Return" bodyClass="user-page admin-page">
+    <x-admin-header />
+    
+    <div class="dashboard-layout">
+        <x-admin-sidebar />
 
-            <nav>
-                 <a href="#" class="settings-icon" title="Settings">⚙️</a>
-        </div>
-    </header>
+        <main class="dashboard-main">
+            <div class="panel">
+                <h2><i class="fa-solid fa-exchange-alt"></i> Borrow and Return</h2>
 
-  <div class="dashboard-layout">
-    <aside class="sidebar">
-      <a class="side-link" href="{{ route ('dashboard')}}">Dashboard</a>
-      <a class="side-link" href="{{ route ('user_management')}}">User Management</a>
-      <a class="side-link" href="{{ route ('book_management')}}">Book Management</a>
-      <a class="side-link" href="{{ route ('borrow_return')}}">Borrow and return</a>
-      <a class="side-link" href="{{ route ('fines')}}">Fine Management</a>
-      <a class="side-link" href="{{ route ('reports')}}">Reports</a>
-      <a class="side-link" href="{{ route ('notifications')}}">Notifications</a>
-      <a class="side-link side-logout" href="{{ route ('login')}}">Sign out</a>
-    </aside>
+                @if(session('success'))
+                    <div class="alert success" style="background: #d4edda; color: #155724; padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                        <i class="fa-solid fa-check-circle"></i> {{ session('success') }}
+                    </div>
+                @endif
 
-    <main class="dashboard-main">
-      <div class="panel">
-        <h2>Borrow and Return</h2>
+                @if(session('error'))
+                    <div class="alert danger" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 2px solid #f5c6cb; font-weight: 600;">
+                        <i class="fa-solid fa-exclamation-circle"></i> <strong>Error:</strong> {{ session('error') }}
+                    </div>
+                @endif
 
-        <div class="table-toolbar">
-          <div class="search-wrap">
-            <input type="search" placeholder="Search by Name, Email, or ID">
-            <button class="btn small">Filter</button>
-          </div>
-          <a class="btn primary" href="#">+ Add</a>
-        </div>
+                @if(session('debug'))
+                    <div class="alert" style="background: #d1ecf1; color: #0c5460; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 2px solid #bee5eb;">
+                        <i class="fa-solid fa-info-circle"></i> <strong>Debug:</strong> {{ session('debug') }}
+                    </div>
+                @endif
 
-        <div class="table-wrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Book</th>
-                <th>Due Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Nikko Rey Arguelles</td>
-                <td>Fundamentals of Programming</td>
-                <td>2025-05-15</td>
-                <td><button class="pill pill-blue">Borrowed</button></td>
-              </tr>
-              <tr>
-                <td>Linool Salvador Dugenio</td>
-                <td>El Filibusterismo</td>
-                <td>2025-05-21</td>
-                <td><button class="pill pill-green" disabled>Returned</button></td>
-              </tr>
-              <tr>
-                <td>Cyril Josh P. Roselim</td>
-                <td>Science Experiments</td>
-                <td>2025-05-10</td>
-                <td><button class="pill pill-blue">Borrowed</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </main>
-  </div>
+                <div class="table-toolbar">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" id="borrowSearch" placeholder="Search by Name, Book Title, or ID">
+                    </div>
+                </div>
 
-  <script src="{{ asset('js/script.js') }}"></script>
-</body>
-</html>
+                <div class="table-wrap">
+                    <table class="table" id="borrowTable">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Book</th>
+                                <th>Borrowed Date</th>
+                                <th>Due Date</th>
+                                <th>Days</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($borrowedBooks as $borrowed)
+                            <tr data-user="{{ strtolower($borrowed->user->name) }}" data-book="{{ strtolower($borrowed->book->title) }}">
+                                <td>{{ $borrowed->user->name }}</td>
+                                <td>{{ $borrowed->book->title }}</td>
+                                <td>{{ $borrowed->borrowed_at ? $borrowed->borrowed_at->format('M d, Y') : 'N/A' }}</td>
+                                <td>
+                                    {{ $borrowed->due_date ? $borrowed->due_date->format('M d, Y') : 'N/A' }}
+                                    @if($borrowed->isOverdue())
+                                        <span class="badge danger" style="margin-left: 8px;">
+                                            {{ $borrowed->daysOverdue() }} days overdue
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>{{ $borrowed->days }} days</td>
+                                <td>
+                                    @if($borrowed->isOverdue())
+                                        <span class="badge danger">Overdue</span>
+                                    @else
+                                        <span class="badge info">Borrowed</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('return.show', $borrowed->id) }}" 
+                                       class="btn small" 
+                                       style="text-decoration: none;"
+                                       onclick="console.log('Clicking Process Return for ID: {{ $borrowed->id }}'); return true;">
+                                        <i class="fa-solid fa-check"></i> Process Return
+                                    </a>
+                                    <br>
+                                    <small style="color: #666; font-size: 10px;">ID: {{ $borrowed->id }} | Book: {{ $borrowed->book_id }} | User: {{ $borrowed->user_id }}</small>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 60px 40px; color: #666;">
+                                    <i class="fa-solid fa-inbox" style="font-size: 64px; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                    <h3 style="color: #999; margin-bottom: 10px;">No Active Borrowings</h3>
+                                    <p style="color: #999; margin-bottom: 25px;">There are currently no books that need to be returned.</p>
+                                    <p style="color: #666; font-size: 14px;">
+                                        <i class="fa-solid fa-info-circle"></i> When users borrow books, they will appear here for return processing.
+                                    </p>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple search functionality
+        document.getElementById('borrowSearch')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#borrowTable tbody tr');
+            
+            rows.forEach(row => {
+                const user = row.dataset.user || '';
+                const book = row.dataset.book || '';
+                if (user.includes(searchTerm) || book.includes(searchTerm) || searchTerm === '') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</x-layout>

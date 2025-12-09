@@ -11,7 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'auth.check' => \App\Http\Middleware\CheckAuth::class,
+            'role.check' => \App\Http\Middleware\CheckRole::class,
+        ]);
+    })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule): void {
+        // Calculate late fees daily at midnight
+        $schedule->command('books:calculate-late-fees')->daily();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

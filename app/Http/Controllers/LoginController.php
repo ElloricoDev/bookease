@@ -10,11 +10,27 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        // If user is already logged in, redirect to appropriate dashboard
+        if (session('logged_in')) {
+            if (session('role') === 'admin') {
+                return redirect('/admin/dashboard');
+            }
+            return redirect('/user/dashboard');
+        }
+        
         return view('login');
     }
 
     public function login(Request $request)
     {
+        // If user is already logged in, redirect to appropriate dashboard
+        if (session('logged_in')) {
+            if (session('role') === 'admin') {
+                return redirect('/admin/dashboard');
+            }
+            return redirect('/user/dashboard');
+        }
+        
         // Validate input
         $request->validate([
             'email' => 'required|email',
