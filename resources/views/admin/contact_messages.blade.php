@@ -19,6 +19,16 @@
                     <div class="alert success"><i class="fa-solid fa-check-circle"></i> {{ session('success') }}</div>
                 @endif
 
+                <!-- Search -->
+                <div class="table-toolbar" style="margin-bottom: 20px;">
+                    <x-admin-search 
+                        id="messageSearch" 
+                        placeholder="Search by Name, Email, or Subject"
+                        tableId="messagesTable"
+                        :searchFields="['name', 'email', 'subject']"
+                    />
+                </div>
+
                 <!-- Filter Tabs -->
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
                     <a href="{{ route('admin.contact_messages', ['filter' => 'all']) }}" 
@@ -53,7 +63,7 @@
 
                 <!-- Messages List -->
                 <div class="table-wrap">
-                    <table class="table">
+                    <table class="table" id="messagesTable">
                         <thead>
                             <tr>
                                 <th>Status</th>
@@ -66,7 +76,12 @@
                         </thead>
                         <tbody>
                             @forelse($messages as $message)
-                            <tr style="{{ $message->status === 'new' ? 'background: #fff3cd;' : '' }}">
+                            <tr 
+                                style="{{ $message->status === 'new' ? 'background: #fff3cd;' : '' }}"
+                                data-name="{{ strtolower($message->name) }}"
+                                data-email="{{ strtolower($message->email) }}"
+                                data-subject="{{ strtolower($message->subject) }}"
+                            >
                                 <td>
                                     @if($message->status === 'new')
                                         <span class="badge danger">New</span>

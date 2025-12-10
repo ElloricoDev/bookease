@@ -6,7 +6,7 @@
         <nav>
             <ul>
                 <li>
-                    <a href="{{ route('info') }}" class="profile-link" title="Account Settings">
+                    <a href="{{ route('admin.info') }}" class="profile-link" title="Account Settings">
                         <i class="fa-solid fa-user"></i>
                     </a>
                 </li>

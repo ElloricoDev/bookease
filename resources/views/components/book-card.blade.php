@@ -71,7 +71,7 @@
             @endif
             @if($showPrice && $book->rent_fee > 0)
                 <div style="color: #2e7d32; font-weight: 700; font-size: 15px;">
-                    <i class="fa-solid fa-dollar-sign"></i> {{ number_format($book->rent_fee, 2) }}/day
+                    <i class="fa-solid fa-peso-sign"></i> {{ number_format($book->rent_fee, 2) }}/day
                 </div>
             @endif
         </div>

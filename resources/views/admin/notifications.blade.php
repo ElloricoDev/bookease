@@ -33,6 +33,16 @@
                     <div class="alert success"><i class="fa-solid fa-check-circle"></i> {{ session('success') }}</div>
                 @endif
 
+                <!-- Search -->
+                <div class="table-toolbar" style="margin-bottom: 20px;">
+                    <x-admin-search 
+                        id="notificationSearch" 
+                        placeholder="Search by Title or Message"
+                        listId="notifList"
+                        :searchFields="['title', 'message']"
+                    />
+                </div>
+
                 <!-- Filter Tabs -->
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
                     <a href="{{ route('notifications', ['filter' => 'all']) }}" 
@@ -60,6 +70,8 @@
                     @forelse($notifications as $notification)
                     <div class="list-item {{ $notification->is_read ? 'read' : 'unread' }}" 
                          data-notification-id="{{ $notification->id }}"
+                         data-title="{{ strtolower($notification->title) }}"
+                         data-message="{{ strtolower($notification->message) }}"
                          style="padding: 15px; margin-bottom: 10px; border-radius: 8px; background: {{ $notification->is_read ? '#f8f9fa' : '#fff' }}; border-left: 4px solid {{ $notification->is_read ? '#e0e0e0' : '#2e7d32' }}; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                         <div style="display: flex; align-items: flex-start; gap: 15px;">
                             <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: {{ $notification->is_read ? '#e0e0e0' : '#e8f5e9' }}; display: flex; align-items: center; justify-content: center;">

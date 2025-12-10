@@ -39,6 +39,17 @@ body {
   text-decoration: none;
   color: #fff;
   font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1;
+}
+
+.brand i {
+  font-size: 28px;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .brand:hover { opacity: 0.9; }
@@ -50,6 +61,12 @@ body {
   margin: 0;
   display: flex;
   gap: 22px;
+  align-items: center;
+}
+
+.user-header nav ul li {
+  display: flex;
+  align-items: center;
 }
 
 .user-header nav a {
@@ -60,6 +77,20 @@ body {
   transition: all 0.3s;
   padding: 5px 10px;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.user-header nav a i {
+  font-size: 16px;
+  flex-shrink: 0;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .user-header nav a.active {
@@ -68,8 +99,16 @@ body {
 }
 
 .profile-link {
-  font-size: 20px;
+  font-size: 16px;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-link i {
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
 .logout-link {
@@ -361,6 +400,17 @@ body.user-page {
   text-decoration: none;
   color: #fff;
   font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1;
+}
+
+.brand i {
+  font-size: 26px;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* NAVIGATION */
@@ -370,6 +420,12 @@ body.user-page {
   gap: 22px;
   margin: 0;
   padding: 0;
+  align-items: center;
+}
+
+.user-header-light nav ul li {
+  display: flex;
+  align-items: center;
 }
 
 .user-header-light nav a {
@@ -379,6 +435,21 @@ body.user-page {
   transition: all 0.3s;
   padding: 5px 10px;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.user-header-light nav a i {
+  font-size: 16px;
+  flex-shrink: 0;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .user-header-light nav a:hover {
@@ -947,37 +1018,61 @@ body.user-page {
 
 /* Sidebar */
 .user-sidebar {
-    width: 220px;
+    width: 260px;
+    min-width: 260px;
     background-color: #fff;
     border-right: 1px solid #ddd;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
 }
 
 .user-side-link {
     text-decoration: none;
     color: #333;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.user-side-link i {
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.user-side-link span,
+.user-side-link:not(:has(span)) {
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
 }
 
 .user-side-link.active {
-    background-color: #007bff;
+    background-color: #2e7d32;
     color: #fff;
 }
 
 .user-side-link:hover {
-    background-color: #007bff;
+    background-color: #2e7d32;
     color: #fff;
 }
 
 .user-side-logout {
     margin-top: auto;
-    background-color: #ff4d4d;
+    background-color: #dc3545;
     color: #fff;
     text-align: center;
+    justify-content: center;
 }
 
 .user-side-logout:hover {
@@ -1079,12 +1174,22 @@ body.user-page {
         width: 100%;
         flex-direction: row;
         overflow-x: auto;
+        padding: 10px;
     }
 
     .user-sidebar .user-side-link {
         flex: 1;
         text-align: center;
         margin-bottom: 0;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .user-sidebar .user-side-link i {
+        font-size: 16px;
+        width: 18px;
     }
 
     .user-profile-header {
@@ -1119,6 +1224,17 @@ body {
     font-weight: 800;
     color: #fff;
     font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1;
+}
+
+.admin-header.user-header .brand i {
+    font-size: 28px;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .admin-header.user-header nav ul {

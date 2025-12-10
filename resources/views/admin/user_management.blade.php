@@ -9,11 +9,18 @@
                 <h2><i class="fa-solid fa-users"></i> User Management</h2>
 
                 <div class="table-toolbar">
-                    <div class="search-wrap">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="search" id="userSearch" placeholder="Search by Name, Email, or ID">
-                        <button class="btn small" id="filterBtn"><i class="fa-solid fa-filter"></i> Filter</button>
-                    </div>
+                    <x-admin-search 
+                        id="userSearch" 
+                        placeholder="Search by Name, Email, or ID"
+                        tableId="usersTable"
+                        :searchFields="['name', 'email', 'id']"
+                    >
+                        <select id="roleFilter" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; color: #333; outline: none;">
+                            <option value="all">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                    </x-admin-search>
                     <a href="{{ route('users.create') }}" class="btn primary"><i class="fa-solid fa-plus"></i> Add User</a>
                 </div>
 
@@ -36,9 +43,9 @@
                             @foreach($users as $user)
                             <tr 
                                 data-id="{{ $user->id }}" 
-                                data-name="{{ $user->name }}" 
-                                data-email="{{ $user->email }}" 
-                                data-role="{{ $user->role }}"
+                                data-name="{{ strtolower($user->name) }}" 
+                                data-email="{{ strtolower($user->email) }}" 
+                                data-role="{{ strtolower($user->role) }}"
                             >
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
@@ -88,6 +95,47 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Role filter functionality (works together with search)
+            const roleFilter = document.getElementById('roleFilter');
+            const searchInput = document.getElementById('userSearch');
+            
+            function applyFilters() {
+                const selectedRole = roleFilter ? roleFilter.value.toLowerCase() : 'all';
+                const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const rows = document.querySelectorAll('#usersTable tbody tr');
+                
+                rows.forEach(row => {
+                    const rowRole = (row.dataset.role || '').toLowerCase();
+                    const rowName = (row.dataset.name || '').toLowerCase();
+                    const rowEmail = (row.dataset.email || '').toLowerCase();
+                    const rowId = String(row.dataset.id || '').toLowerCase();
+                    
+                    // Check role filter
+                    let roleMatch = selectedRole === 'all' || rowRole === selectedRole;
+                    
+                    // Check search filter
+                    let searchMatch = searchTerm === '' || 
+                        rowName.includes(searchTerm) || 
+                        rowEmail.includes(searchTerm) || 
+                        rowId.includes(searchTerm);
+                    
+                    // Show row only if both filters match
+                    if (roleMatch && searchMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            if (roleFilter) {
+                roleFilter.addEventListener('change', applyFilters);
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', applyFilters);
+            }
+
             const deleteModal = document.getElementById('deleteModal');
             const deleteMessage = document.getElementById('deleteMessage');
             const deleteCancel = document.getElementById('deleteCancel');

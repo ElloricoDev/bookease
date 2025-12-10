@@ -4,25 +4,32 @@
     <div class="user-dashboard-layout">
         <aside class="user-sidebar">
             <a class="user-side-link {{ request()->routeIs('home') || request()->routeIs('user.dashboard') ? 'active' : '' }}" href="{{ route('home') }}">
-                <i class="fa-solid fa-home"></i> Home
+                <i class="fa-solid fa-home"></i>
+                <span>Home</span>
             </a>
             <a class="user-side-link {{ request()->routeIs('books') ? 'active' : '' }}" href="{{ route('books') }}">
-                <i class="fa-solid fa-book"></i> Books
+                <i class="fa-solid fa-book"></i>
+                <span>Books</span>
             </a>
             <a class="user-side-link {{ request()->routeIs('my.borrowed') ? 'active' : '' }}" href="{{ route('my.borrowed') }}">
-                <i class="fa-solid fa-book-open-reader"></i> My Borrowed Books
+                <i class="fa-solid fa-book-open-reader"></i>
+                <span>My Borrowed Books</span>
             </a>
             <a class="user-side-link {{ request()->routeIs('my.reservations') ? 'active' : '' }}" href="{{ route('my.reservations') }}">
-                <i class="fa-solid fa-bookmark"></i> My Reservations
+                <i class="fa-solid fa-bookmark"></i>
+                <span>My Reservations</span>
             </a>
             <a class="user-side-link {{ request()->routeIs('payment.history') ? 'active' : '' }}" href="{{ route('payment.history') }}">
-                <i class="fa-solid fa-dollar-sign"></i> Payment History
+                <i class="fa-solid fa-peso-sign"></i>
+                <span>Payment History</span>
             </a>
             <a class="user-side-link {{ request()->routeIs('info') ? 'active' : '' }}" href="{{ route('info') }}">
-                <i class="fa-solid fa-user"></i> Account
+                <i class="fa-solid fa-user"></i>
+                <span>Account</span>
             </a>
             <a class="user-side-link user-side-logout" href="{{ url('/logout') }}">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
             </a>
         </aside>
 
@@ -36,7 +43,7 @@
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <p style="margin: 0 0 8px 0; opacity: 0.9; font-size: 14px;">Total Paid</p>
-                                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">Php{{ number_format($totalPaid, 2) }}</h2>
+                                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">₱{{ number_format($totalPaid, 2) }}</h2>
                             </div>
                             <i class="fa-solid fa-arrow-up" style="font-size: 32px; opacity: 0.8;"></i>
                         </div>
@@ -45,7 +52,7 @@
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <p style="margin: 0 0 8px 0; opacity: 0.9; font-size: 14px;">Total Refunded</p>
-                                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">Php{{ number_format($totalRefunded, 2) }}</h2>
+                                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">₱{{ number_format($totalRefunded, 2) }}</h2>
                             </div>
                             <i class="fa-solid fa-arrow-down" style="font-size: 32px; opacity: 0.8;"></i>
                         </div>
@@ -54,7 +61,7 @@
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <p style="margin: 0 0 8px 0; opacity: 0.9; font-size: 14px;">Net Amount</p>
-                                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">Php{{ number_format($totalPaid - $totalRefunded, 2) }}</h2>
+                                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">₱{{ number_format($totalPaid - $totalRefunded, 2) }}</h2>
                             </div>
                             <i class="fa-solid fa-wallet" style="font-size: 32px; opacity: 0.8;"></i>
                         </div>
@@ -113,7 +120,7 @@
                                         </td>
                                         <td style="padding: 15px;">
                                             <strong style="color: {{ $payment->type === 'refund' ? '#28a745' : '#333' }}; font-size: 16px;">
-                                                {{ $payment->type === 'refund' ? '+' : '-' }}Php{{ number_format($payment->amount, 2) }}
+                                                {{ $payment->type === 'refund' ? '+' : '-' }}₱{{ number_format($payment->amount, 2) }}
                                             </strong>
                                         </td>
                                         <td style="padding: 15px; color: #666;">

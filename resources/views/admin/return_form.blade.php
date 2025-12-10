@@ -30,7 +30,7 @@
                             <strong style="color: #666;">Borrowed Date:</strong>
                             <p style="margin: 5px 0 0 0;">{{ $borrowedBook->borrowed_at ? $borrowedBook->borrowed_at->format('M d, Y') : 'N/A' }}</p>
                         </div>
-                        <div>
+                        <div>git 
                             <strong style="color: #666;">Due Date:</strong>
                             <p style="margin: 5px 0 0 0;">
                                 {{ $borrowedBook->due_date ? $borrowedBook->due_date->format('M d, Y') : 'N/A' }}
@@ -47,10 +47,10 @@
                                 <i class="fa-solid fa-exclamation-triangle"></i> Late Fee:
                             </strong>
                             <span style="color: #856404; font-size: 18px; font-weight: 700;">
-                                Php{{ number_format($borrowedBook->daysOverdue() * 1.00, 2) }}
+                                ₱{{ number_format($borrowedBook->daysOverdue() * 1.00, 2) }}
                             </span>
                             <p style="margin: 5px 0 0 0; color: #856404; font-size: 14px;">
-                                {{ $borrowedBook->daysOverdue() }} days × Php1.00 per day
+                                {{ $borrowedBook->daysOverdue() }} days × ₱1.00 per day
                             </p>
                         </div>
                     @endif

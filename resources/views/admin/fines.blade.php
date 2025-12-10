@@ -19,10 +19,12 @@
                 @endif
 
                 <div class="table-toolbar">
-                    <div class="search-wrap">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="search" id="fineSearch" placeholder="Search by User or Book">
-                    </div>
+                    <x-admin-search 
+                        id="fineSearch" 
+                        placeholder="Search by User or Book"
+                        tableId="finesTable"
+                        :searchFields="['userName', 'bookTitle']"
+                    />
                 </div>
 
                 <div class="table-wrap">
@@ -114,23 +116,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Search functionality
-            document.getElementById('fineSearch')?.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#finesTable tbody tr');
-                
-                rows.forEach(row => {
-                    const userName = row.dataset.userName || '';
-                    const bookTitle = row.dataset.bookTitle || '';
-                    
-                    if (userName.includes(searchTerm) || bookTitle.includes(searchTerm) || searchTerm === '') {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
             // Delete confirmation modal
             const deleteModal = document.getElementById('deleteModal');
             const deleteMessage = document.getElementById('deleteMessage');

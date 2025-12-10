@@ -67,6 +67,11 @@ Route::middleware(['auth.check', 'role.check:admin'])->group(function () {
     Route::get('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'show'])->name('admin.contact_messages.show');
     Route::put('/contact-messages/{id}/status', [\App\Http\Controllers\Admin\ContactMessageController::class, 'updateStatus'])->name('admin.contact_messages.update_status');
     Route::delete('/contact-messages/{id}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.contact_messages.destroy');
+
+    // Admin Profile
+    Route::get('/admin/info', [\App\Http\Controllers\ProfileController::class, 'adminIndex'])->name('admin.info');
+    Route::put('/admin/info/update', [\App\Http\Controllers\ProfileController::class, 'update'])->name('admin.info.update');
+    Route::put('/admin/info/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('admin.info.password');
 });
 
 // User routes (user only)

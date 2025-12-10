@@ -19,10 +19,12 @@
                 @endif
 
                 <div class="table-toolbar">
-                    <div class="search-wrap">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="search" id="bookSearch" placeholder="Search by Title, Author, ISBN, or Category">
-                    </div>
+                    <x-admin-search 
+                        id="bookSearch" 
+                        placeholder="Search by Title, Author, ISBN, or Category"
+                        tableId="booksTable"
+                        :searchFields="['title', 'author', 'isbn', 'category']"
+                    />
                     <a class="btn primary" href="{{ route('books.create') }}"><i class="fa-solid fa-plus"></i> Add Book</a>
                 </div>
 
@@ -116,27 +118,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Search functionality
-            document.getElementById('bookSearch')?.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#booksTable tbody tr');
-                
-                rows.forEach(row => {
-                    const title = row.dataset.title || '';
-                    const author = row.dataset.author || '';
-                    const isbn = row.dataset.isbn || '';
-                    const category = row.dataset.category || '';
-                    
-                    if (title.includes(searchTerm) || author.includes(searchTerm) || 
-                        isbn.includes(searchTerm) || category.includes(searchTerm) || 
-                        searchTerm === '') {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
             // Delete confirmation modal
             const deleteModal = document.getElementById('deleteModal');
             const deleteMessage = document.getElementById('deleteMessage');

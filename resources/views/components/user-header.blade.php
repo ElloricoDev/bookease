@@ -36,8 +36,8 @@
                     <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}"><i class="fa-solid fa-info-circle"></i> About us</a></li>
                     <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}"><i class="fa-solid fa-envelope"></i> Contact us</a></li>
                     <li>
-                        <a href="{{ route('info') }}" class="profile-link" title="Account Settings">
-                            <i class="fa-solid fa-user"></i>
+                        <a href="{{ route('info') }}" class="profile-link {{ request()->routeIs('info') ? 'active' : '' }}" title="Account Settings">
+                            <i class="fa-solid fa-user"></i> Profile
                         </a>
                     </li>
                     <li>

@@ -27,10 +27,12 @@
                 @endif
 
                 <div class="table-toolbar">
-                    <div class="search-wrap">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="search" id="borrowSearch" placeholder="Search by Name, Book Title, or ID">
-                    </div>
+                    <x-admin-search 
+                        id="borrowSearch" 
+                        placeholder="Search by Name, Book Title, or ID"
+                        tableId="borrowTable"
+                        :searchFields="['user', 'book']"
+                    />
                 </div>
 
                 <div class="table-wrap">
@@ -99,20 +101,5 @@
     </div>
 
     <script>
-        // Simple search functionality
-        document.getElementById('borrowSearch')?.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('#borrowTable tbody tr');
-            
-            rows.forEach(row => {
-                const user = row.dataset.user || '';
-                const book = row.dataset.book || '';
-                if (user.includes(searchTerm) || book.includes(searchTerm) || searchTerm === '') {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
     </script>
 </x-layout>

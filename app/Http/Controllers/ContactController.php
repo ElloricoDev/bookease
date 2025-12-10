@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ContactMessage;
+use App\Models\Notification;
 
 class ContactController extends Controller
 {
@@ -29,7 +30,7 @@ class ContactController extends Controller
 
         $userId = session('user_id');
 
-        ContactMessage::create([
+        $contactMessage = ContactMessage::create([
             'name' => $request->name,
             'email' => $request->email,
             'subject' => $request->subject,
@@ -38,9 +39,15 @@ class ContactController extends Controller
             'status' => 'new',
         ]);
 
-        // Create notification for admin (we'll create a system notification)
-        // Note: This assumes admin notifications are stored differently or we create a system-wide notification
-        // For now, we'll just store the message and admins can view it in the contact messages section
+        // Create notification for admin
+        Notification::createNotification(
+            'system',
+            'New Contact Message',
+            'A new message received from ' . $contactMessage->name . ' (Subject: ' . $contactMessage->subject . ')',
+            null, // No specific user_id for admin notification
+            null,
+            null
+        );
 
         return redirect()->back()->with('success', 'Thank you for contacting us! We will get back to you soon.');
     }

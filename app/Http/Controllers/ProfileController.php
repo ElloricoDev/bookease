@@ -8,6 +8,7 @@ use App\Models\BorrowedBook;
 use App\Models\Reservation;
 use App\Models\Payment;
 use App\Models\CartItem;
+use App\Models\Book;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -82,7 +83,9 @@ class ProfileController extends Controller
         Session::put('name', $user->name);
         Session::put('email', $user->email);
 
-        return redirect()->route('info')->with('success', 'Profile updated successfully!');
+        // Redirect based on role
+        $redirectRoute = session('role') === 'admin' ? 'admin.info' : 'info';
+        return redirect()->route($redirectRoute)->with('success', 'Profile updated successfully!');
     }
 
     /**
@@ -113,6 +116,39 @@ class ProfileController extends Controller
             'password' => Hash::make($request->new_password),
         ]);
 
-        return redirect()->route('info')->with('success', 'Password updated successfully!');
+        // Redirect based on role
+        $redirectRoute = session('role') === 'admin' ? 'admin.info' : 'info';
+        return redirect()->route($redirectRoute)->with('success', 'Password updated successfully!');
+    }
+
+    /**
+     * Display the admin profile page
+     */
+    public function adminIndex()
+    {
+        $userId = session('user_id');
+        
+        if (!$userId) {
+            return redirect('/login')->with('error', 'Please login to view your profile.');
+        }
+
+        $user = User::findOrFail($userId);
+
+        // Get admin statistics (different from user stats)
+        $stats = [
+            'total_users' => User::where('role', 'user')->count(),
+            'total_books' => Book::count(),
+            'active_borrowings' => BorrowedBook::whereNull('returned_at')->count(),
+            'overdue_books' => BorrowedBook::whereNull('returned_at')
+                ->where('due_date', '<', Carbon::now())
+                ->count(),
+            'pending_reservations' => Reservation::whereIn('status', ['pending', 'available'])->count(),
+            'total_payments' => Payment::where('status', 'completed')->count(),
+            'total_revenue' => Payment::where('status', 'completed')
+                ->whereIn('type', ['rent_fee', 'late_fee', 'deposit'])
+                ->sum('amount'),
+        ];
+
+        return view('admin.info', compact('user', 'stats'));
     }
 }

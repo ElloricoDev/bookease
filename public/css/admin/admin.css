@@ -302,6 +302,13 @@ body.admin-page {
     font-size: 0.9rem;
 }
 
+.table-toolbar .search-wrap .search-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
 /* Table */
 .table-wrap {
     overflow-x: auto;

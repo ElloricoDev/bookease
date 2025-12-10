@@ -12,7 +12,7 @@
         <i class="fa-solid fa-exchange-alt"></i> Borrow and Return
     </a>
     <a class="side-link {{ request()->routeIs('fines') ? 'active' : '' }}" href="{{ route('fines') }}">
-        <i class="fa-solid fa-dollar-sign"></i> Fine Management
+        <i class="fa-solid fa-peso-sign"></i> Fine Management
     </a>
     <a class="side-link {{ request()->routeIs('reports') ? 'active' : '' }}" href="{{ route('reports') }}">
         <i class="fa-solid fa-chart-bar"></i> Reports
