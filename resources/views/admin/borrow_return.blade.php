@@ -64,19 +64,30 @@
                                 </td>
                                 <td>{{ $borrowed->days }} days</td>
                                 <td>
-                                    @if($borrowed->isOverdue())
+                                    @if($borrowed->borrow_status === 'pending')
+                                        <span class="badge warning">Pending Approval</span>
+                                    @elseif($borrowed->isOverdue())
                                         <span class="badge danger">Overdue</span>
                                     @else
                                         <span class="badge info">Borrowed</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('return.show', $borrowed->id) }}" 
-                                       class="btn small" 
-                                       style="text-decoration: none;"
-                                       onclick="console.log('Clicking Process Return for ID: {{ $borrowed->id }}'); return true;">
-                                        <i class="fa-solid fa-check"></i> Process Return
-                                    </a>
+                                    @if($borrowed->borrow_status === 'pending')
+                                        <form action="{{ route('borrow.approve', $borrowed->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="btn small primary">
+                                                <i class="fa-solid fa-check"></i> Mark as Borrowed
+                                            </button>
+                                        </form>
+                                    @else
+                                        <a href="{{ route('return.show', $borrowed->id) }}" 
+                                           class="btn small" 
+                                           style="text-decoration: none;"
+                                           onclick="console.log('Clicking Process Return for ID: {{ $borrowed->id }}'); return true;">
+                                            <i class="fa-solid fa-check"></i> Process Return
+                                        </a>
+                                    @endif
                                     <br>
                                     <small style="color: #666; font-size: 10px;">ID: {{ $borrowed->id }} | Book: {{ $borrowed->book_id }} | User: {{ $borrowed->user_id }}</small>
                                 </td>

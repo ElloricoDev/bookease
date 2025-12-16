@@ -140,7 +140,7 @@
                     @else
                         <div style="display: grid; gap: 25px;">
                             @foreach($borrowedBooks as $borrowed)
-                            <div style="background: #f8f9fa; padding: 28px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); border-left: 5px solid {{ $borrowed->isOverdue() ? '#dc3545' : '#2e7d32' }}; transition: all 0.3s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.15)'; this.style.transform='translateX(5px)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'; this.style.transform='translateX(0)'">
+                            <div style="background: #f8f9fa; padding: 28px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); border-left: 5px solid {{ $borrowed->borrow_status === 'pending' ? '#ffc107' : ($borrowed->isOverdue() ? '#dc3545' : '#2e7d32') }}; transition: all 0.3s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.15)'; this.style.transform='translateX(5px)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'; this.style.transform='translateX(0)'">
                                 <div style="display: flex; gap: 25px; align-items: start;">
                                     <img src="{{ $borrowed->book->image ? asset($borrowed->book->image) : asset('images/book1.jpg') }}" 
                                          alt="{{ $borrowed->book->title }}" 
@@ -148,7 +148,14 @@
                                          onerror="this.src='{{ asset('images/book1.jpg') }}'">
                                     
                                     <div style="flex: 1;">
-                                        <h4 style="margin: 0 0 12px 0; color: #1b1f1b; font-size: 24px; font-weight: 700;">{{ $borrowed->book->title }}</h4>
+                                        <h4 style="margin: 0 0 12px 0; color: #1b1f1b; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                            {{ $borrowed->book->title }}
+                                            @if($borrowed->borrow_status === 'pending')
+                                                <span style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                                    <i class="fa-solid fa-hourglass-half"></i> Pending Approval
+                                                </span>
+                                            @endif
+                                        </h4>
                                         <p style="color: #666; margin: 0 0 20px 0; font-size: 16px; font-weight: 500;">{{ $borrowed->book->author }}</p>
                                         
                                         <div style="display: grid; gap: 12px; margin-bottom: 20px;">

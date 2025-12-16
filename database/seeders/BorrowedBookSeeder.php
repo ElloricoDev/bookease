@@ -87,7 +87,7 @@ class BorrowedBookSeeder extends Seeder
             $lateFee = 0;
             if ($returnedAt->gt($dueDate)) {
                 $lateDays = $returnedAt->diffInDays($dueDate);
-                $lateFee = $lateDays * 1.00; // $1 per day
+                $lateFee = $lateDays * 1.00; // ₱1 per day
             }
 
             $borrowedBook = BorrowedBook::create([

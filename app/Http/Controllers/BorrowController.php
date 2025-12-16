@@ -11,6 +11,26 @@ use Carbon\Carbon;
 
 class BorrowController extends Controller
 {
+    /**
+     * Approve a pending borrow request (admin action).
+     */
+    public function approve($id)
+    {
+        $borrowedBook = BorrowedBook::with(['book', 'user'])->findOrFail($id);
+
+        if ($borrowedBook->borrow_status !== 'pending') {
+            return redirect()->route('borrow_return')
+                ->with('error', 'Only pending borrow requests can be approved.');
+        }
+
+        $borrowedBook->update([
+            'borrow_status' => 'borrowed',
+        ]);
+
+        return redirect()->route('borrow_return')
+            ->with('success', 'Borrow request approved. The book is now marked as borrowed.');
+    }
+
     public function confirm()
     {
         $userId = session('user_id');
@@ -46,7 +66,7 @@ class BorrowController extends Controller
                 ->where('status', 'available')
                 ->first();
 
-            // Create borrowed book record
+            // Create borrowed book record as PENDING until admin confirms
             $borrowedBook = BorrowedBook::create([
                 'user_id' => $userId,
                 'book_id' => $item->book_id,
@@ -56,7 +76,7 @@ class BorrowController extends Controller
                 'borrowed_at' => Carbon::now(),
                 'due_date' => Carbon::now()->addDays($item->days),
                 'payment_type' => 'cash',
-                'borrow_status' => 'borrowed',
+                'borrow_status' => 'pending',
                 'max_renewals' => 2,
             ]);
 
@@ -94,8 +114,8 @@ class BorrowController extends Controller
             // Create notification for admin
             Notification::createNotification(
                 'borrow',
-                'New Book Borrowed',
-                $borrowedBook->user->name . ' borrowed "' . $book->title . '" (Due: ' . $borrowedBook->due_date->format('M d, Y') . ')',
+                'New Borrow Request',
+                $borrowedBook->user->name . ' requested to borrow "' . $book->title . '" (Due: ' . $borrowedBook->due_date->format('M d, Y') . '). Please confirm once the book is handed over.',
                 null, // Admin notification (no specific user)
                 $book->id,
                 $borrowedBook->id
@@ -105,6 +125,6 @@ class BorrowController extends Controller
             $item->delete();
         }
 
-        return redirect()->route('cart')->with('success', 'Borrowing complete! You can view your borrowed books in "My Borrowed Books".');
+        return redirect()->route('cart')->with('success', 'Your borrow request has been submitted and is pending admin approval.');
     }
 }

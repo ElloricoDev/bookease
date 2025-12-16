@@ -67,8 +67,8 @@ class ReturnController extends Controller
     public function processReturn(Request $request, $id)
     {
         $request->validate([
-            'return_condition' => 'required|in:good,damaged,lost',
-            'notes' => 'nullable|string|max:500',
+            'return_condition' => 'required|in:good,fair,damaged,lost',
+            'return_notes' => 'nullable|string|max:500',
         ]);
 
         $borrowedBook = BorrowedBook::with(['book', 'user'])->findOrFail($id);

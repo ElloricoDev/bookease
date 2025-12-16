@@ -14,6 +14,18 @@
                     </div>
                 @endif
 
+                @if($errors->any())
+                    <div class="alert danger" style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                        <i class="fa-solid fa-exclamation-circle"></i>
+                        <strong>Please fix the following errors:</strong>
+                        <ul style="margin: 10px 0 0 20px; padding: 0;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div style="background: #fff; padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #e0e0e0;">
                     <h3 style="margin-top: 0; color: #1b1f1b;">Borrowing Information</h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">

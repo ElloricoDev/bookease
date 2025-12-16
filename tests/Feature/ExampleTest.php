@@ -8,12 +8,13 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Ensure the home route redirects to the login page.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_home_route_redirects_to_login(): void
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
     }
 }

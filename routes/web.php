@@ -49,6 +49,8 @@ Route::middleware(['auth.check', 'role.check:admin'])->group(function () {
         return view('admin.borrow_return', compact('borrowedBooks'));
     })->name('borrow_return');
 
+    Route::post('/borrow/{id}/approve', [BorrowController::class, 'approve'])->name('borrow.approve');
+
     Route::get('/return/{id}', [\App\Http\Controllers\ReturnController::class, 'showReturnForm'])->name('return.show');
     Route::post('/return/{id}', [\App\Http\Controllers\ReturnController::class, 'processReturn'])->name('return.process');
 
