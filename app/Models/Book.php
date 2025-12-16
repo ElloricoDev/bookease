@@ -37,6 +37,15 @@ class Book extends Model
     }
 
     /**
+     * Check if book can be reserved (unavailable because all copies are out,
+     * but not permanently unavailable/lost).
+     */
+    public function canBeReserved(): bool
+    {
+        return !$this->isAvailable() && $this->status !== 'unavailable';
+    }
+
+    /**
      * Get borrowed books relationship
      */
     public function borrowedBooks()

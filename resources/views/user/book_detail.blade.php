@@ -16,7 +16,7 @@
                          style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
                          onerror="this.src='{{ asset('images/book1.jpg') }}'">
                     
-                    @if(!$book->isAvailable())
+                    @if(!$book->isAvailable() && $book->status === 'unavailable')
                         <div style="margin-top: 20px; padding: 12px; background: #dc3545; color: white; border-radius: 8px; font-weight: 600;">
                             <i class="fa-solid fa-ban"></i> Currently Unavailable
                         </div>
@@ -128,13 +128,17 @@
                                     </button>
                                 </form>
                             @endif
-                        @else
+                        @elseif($book->canBeReserved())
                             <form action="{{ route('reserve', $book->id) }}" method="POST" style="flex: 1;">
                                 @csrf
                                 <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 18px; font-weight: 600; background: #17a2b8; color: white;">
                                     <i class="fa-solid fa-bookmark"></i> Reserve This Book
                                 </button>
                             </form>
+                        @else
+                            <div style="flex: 1; padding: 15px; background: #f8d7da; border-radius: 8px; text-align: center; color: #721c24;">
+                                <i class="fa-solid fa-ban"></i> This book is currently unavailable and cannot be reserved.
+                            </div>
                         @endif
                     </div>
                 </div>

@@ -22,9 +22,14 @@ class ReservationController extends Controller
 
         $book = Book::findOrFail($bookId);
 
-        // Check if book is available
+        // If book is available, user should borrow directly (no reservation)
         if ($book->isAvailable()) {
             return redirect()->back()->with('info', 'Book is available. You can borrow it directly.');
+        }
+
+        // If book is permanently unavailable (lost/removed), do not allow reservation
+        if ($book->status === 'unavailable') {
+            return redirect()->back()->with('error', 'This book is currently unavailable and cannot be reserved.');
         }
 
         // Check if user already has a pending reservation for this book

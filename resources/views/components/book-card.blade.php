@@ -7,8 +7,8 @@
 ])
 
 <a href="{{ route('books.show', $book->id) }}" style="text-decoration: none; color: inherit; display: block; background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,.1); transition: all 0.3s; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 12px 40px rgba(0,0,0,.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,.1)'">
-    @if($showAvailability)
-        @if(!$book->isAvailable())
+        @if($showAvailability)
+            @if(!$book->isAvailable() && $book->status === 'unavailable')
             <div style="position: absolute; top: 15px; right: 15px; z-index: 10; background: rgba(220, 53, 69, 0.95); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,.2);">
                 <i class="fa-solid fa-ban"></i> Unavailable
             </div>
@@ -39,7 +39,7 @@
                         <i class="fa-solid fa-cart-plus"></i>
                     </button>
                 </form>
-            @else
+            @elseif($book->canBeReserved())
                 <form action="{{ route('reserve', $book->id) }}" method="POST" style="position: absolute; bottom: 15px; right: 15px; z-index: 10;" onclick="event.stopPropagation();">
                     @csrf
                     <button type="submit" title="Reserve this book" style="background: #17a2b8; color: #fff; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,.3); transition: all 0.3s; font-size: 20px;" onmouseover="this.style.transform='scale(1.15)'; this.style.background='#138496'" onmouseout="this.style.transform='scale(1)'; this.style.background='#17a2b8'">

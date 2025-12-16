@@ -37,6 +37,16 @@
             <div class="user-panel">
                 <h1 class="user-panel-title"><i class="fa-solid fa-bookmark"></i> My Reservations</h1>
 
+                <div style="background: #f8f9fa; border-radius: 10px; padding: 14px 16px; margin-bottom: 18px; border-left: 4px solid #17a2b8; font-size: 13px; color: #495057;">
+                    <strong style="display: block; margin-bottom: 4px;">
+                        <i class="fa-solid fa-circle-info"></i> How reservations work
+                    </strong>
+                    <span><strong>Pending</strong>: waiting for a copy to be returned. </span>
+                    <span><strong>Available</strong>: a copy is held for you until the shown expiry time. </span>
+                    <span><strong>Fulfilled</strong>: you already borrowed this reserved book. </span>
+                    <span><strong>Expired / Cancelled</strong>: the reservation is no longer active.</span>
+                </div>
+
                 @if(session('success'))
                     <div class="alert success" style="background: #d4edda; color: #155724; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
                         <i class="fa-solid fa-check-circle"></i> {{ session('success') }}
